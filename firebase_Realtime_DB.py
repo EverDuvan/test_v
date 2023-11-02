@@ -13,13 +13,14 @@ datos = {
     'apellido:':'gutierrez'
 }
 
-# Aqui se realiza la insercion de los datos en la base de datos, en este caso en la carpeta usuarios de firebase
+# Aqui se realiza la insercion de los datos en la carpeta <usuarios> en base de datos
+# en este caso en la carpeta usuarios de firebase
 resultado = firebase.post('/usuarios',datos)
 
 # Aqui se imprime la llave o direccion en la que se hizo la insercion
 print (resultado)
 
-# Aqui se lee la informacion de la base de datos
+# Aqui se lee la informacion de la carpeta <usuarios> en base de datos
 leer = firebase.get('/usuarios',None)
 print (leer)
 
