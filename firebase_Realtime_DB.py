@@ -2,7 +2,7 @@ from firebase import firebase
 import pandas as pd
 
 # Aqui se agrega la url de la base de datos asignada por Firebase
-firebase = firebase.FirebaseApplication('https://dbtest-1a464-default-rtdb.firebaseio.com/', None)
+firebase = firebase.FirebaseApplication('<URL aqui>', None)
 
 # Aqui se agregan los datos a insertar el la tabla de la base de datos
 # en cada ejecucion se hace una nueva insercion, incluso de valores repetidos si es el caso
