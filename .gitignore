@@ -7,6 +7,8 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+proxies.txt
+urls.xlsx
 .Python
 build/
 develop-eggs/
