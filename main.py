@@ -4,6 +4,7 @@ import requests
 import os
 from datetime import datetime
 import time
+import threading
 
 # Start counting.
 start_time = time.time()
@@ -22,6 +23,8 @@ df_urls = pd.read_excel(urls_file)
 # create DF columns = ['proxies', 'working'] + df_urls.columns
 df = pd.DataFrame(columns=['proxies', 'working'] + df_urls.columns.tolist())
 
+df_lock = threading.Lock()
+
 def proxy_check(proxy):
     # Add 'http://' if not exist
     if not proxy.startswith('http://'):
@@ -32,16 +35,19 @@ def proxy_check(proxy):
             response = requests.get(url, proxies={'http': proxy, 'https': proxy}, timeout=5)
             if response.status_code == 200:
                 print(f'Proxy {proxy} working with URL {url}')
+                with df_lock:
                 # add working status to DF
-                df.loc[len(df)] = [proxy.replace("http://", ""), True] + row.tolist()
+                    df.loc[len(df)] = [proxy.replace("http://", ""), True] + row.tolist()
             else:
                 print(f'Proxy {proxy} not working with URL {url}')
                 # add working status to DF
-                df.loc[len(df)] = [proxy.replace("http://", ""), False] + row.tolist()
+                with df_lock:
+                    df.loc[len(df)] = [proxy.replace("http://", ""), False] + row.tolist()
         except Exception as e:
             print(f'Proxy {proxy} not working with URL {url}')
             # add working status to DF
-            df.loc[len(df)] = [proxy.replace("http://", ""), False] + row.tolist()
+            with df_lock:
+                df.loc[len(df)] = [proxy.replace("http://", ""), False] + row.tolist()
     return df
 
 # Number of threads
