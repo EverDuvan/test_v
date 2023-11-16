@@ -57,4 +57,3 @@ def send_df_replace(dataframe, db, table):
                         chunksize = 10)
     print ('¡Done!')
 
-print(get_df('data_procesing2','homologados', ['URL','ID']))

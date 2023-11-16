@@ -5,14 +5,20 @@ import os
 from datetime import datetime
 import time
 import threading
-from db_con import *
 
 # Start counting.
 start_time = time.time()
 
-df_urls = get_df('proxies_test', 'urls')
-df_proxies= get_df('proxies_test', 'proxies')
-proxies = df_proxies['ip'].tolist()
+# URL File path
+urls_file = 'urls.xlsx'
+# Proxies File path
+proxies_file = 'proxies.txt'
+
+# Reading proxies
+with open(proxies_file, 'r') as f:
+    proxies = [line.strip() for line in f]
+# Reading URLs
+df_urls = pd.read_excel(urls_file)
 
 # create DF columns = ['proxies', 'working'] + df_urls.columns
 df = pd.DataFrame(columns=['proxies', 'working'] + df_urls.columns.tolist())
@@ -24,7 +30,7 @@ def proxy_check(proxy):
     if not proxy.startswith('http://'):
         proxy = 'http://' + proxy
     for _, row in df_urls.iterrows():
-        url = row['url_category']
+        url = row['urlCategory']
         try:
             response = requests.get(url, proxies={'http': proxy, 'https': proxy}, timeout=5)
             if response.status_code == 200:
@@ -56,10 +62,6 @@ now_str = now.strftime("%Y-%m-%d_%H-%M-%S")
 # Making the folder 'proxies_test' if it doesn't exist
 if not os.path.exists('proxies_test'):
     os.makedirs('proxies_test')
-
-# save DataFrame to DB
-send_df_replace(df, 'proxies_test', 'result')
-
 # save DataFrame to Excel
 df.to_excel(f'proxies_test/{now_str}.xlsx', index=False)
 
