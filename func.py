@@ -9,6 +9,8 @@ load_dotenv()
 df_lock = threading.Lock()
 
 def proxy_check(proxy, df, df_urls):
+    if proxy == '':
+        return
     # Add 'http://' if not exist
     if not proxy.startswith('http://'):
         proxy = 'http://' + proxy
@@ -31,7 +33,6 @@ def proxy_check(proxy, df, df_urls):
             # add working status to DF
             with df_lock:
                 df.loc[len(df)] = [proxy.replace("http://", ""), False] + row.tolist()
-    return df
 
 def get_df(db: str, table, column=[]):
     """
